@@ -23,8 +23,6 @@ const protectRoute = async (req, res, next) => {
     req.user = user.toObject()
     next()
   } catch (e) {
-    console.log('Error protecting routes:', e)
-
     if (e.name === 'TokenExpiredError') {
       return next({ status: 401, msg: "Session expired. Please login again." })
     }

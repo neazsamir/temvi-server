@@ -98,7 +98,6 @@ export const post = async (req, res, next) => {
 		
 		return res.status(201).json({ success: true, msg: 'Post created', data: newPost })
 	} catch (e) {
-		console.log('Error creating post:', e)
 		return next({ msg: 'Failed to create post. Please try again later' })
 	}
 }
@@ -130,7 +129,6 @@ export const getSinglePost = async (req, res, next) => {
 		
 		res.json({ success: true, post: {...post, liked: isLiked ? true : false} })
 	} catch (e) {
-		console.log('Error getting single post', e)
 		next({ msg: 'Failed to fetch' })
 	}
 }
@@ -192,7 +190,6 @@ export const likePost = async (req, res, next) => {
 		
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error liking a post', e)
 		return next({ msg: 'Failed to like the post. Please try again later' })
 	}
 }
@@ -233,9 +230,7 @@ export const editPost = async (req, res, next) => {
 				publicIdParts.push(fileName)
 				const publicId = publicIdParts.join('/')
 				const destroyResult = await cloudinary.uploader.destroy(publicId)
-			} catch (err) {
-				console.error(`Cloudinary delete failed for ${url}:`, err.message)
-			}
+			} catch (e) {}
 		}
 
 		await Post.updateOne({ _id: postId }, {
@@ -249,7 +244,6 @@ export const editPost = async (req, res, next) => {
 
 		res.json({ success: true })
 	} catch (e) {
-		console.error('Error editing post:', e)
 		next({ status: 500, msg: 'Failed to edit. Please try again later.' })
 	}
 }
@@ -278,7 +272,6 @@ export const deletePost = async (req, res, next) => {
 				const parts = url.split('/')
 				const uploadIndex = parts.findIndex(p => p === 'upload')
 				if (uploadIndex === -1) {
-					console.warn('Invalid Cloudinary URL, skipping delete:', url)
 					continue
 				}
 
@@ -289,9 +282,7 @@ export const deletePost = async (req, res, next) => {
 				const publicId = publicIdParts.join('/')
 				await cloudinary.uploader.destroy(publicId)
 
-			} catch (err) {
-				console.error(`Cloudinary delete failed for ${url}:`, err.message)
-			}
+			} catch (e) {}
 		}
 
 		await Post.deleteOne({ _id: postId })
@@ -310,7 +301,6 @@ export const deletePost = async (req, res, next) => {
 
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error deleting post: ', e)
 		next({ msg: 'Failed to delete post. Please try again later' })
 	}
 }
@@ -383,7 +373,6 @@ export const getUserPosts = async (req, res, next) => {
 			totalPages
 		})
 	} catch (e) {
-		console.error('Error get user posts', e)
 		return next({ status: 500, msg: 'Failed to fetch user posts' })
 	}
 }
@@ -458,7 +447,6 @@ export const postComment = async (req, res, next) => {
 	
 		return res.status(201).json({ success: true, msg: 'Comment posted' })
 	} catch (e) {
-		console.error('Error posting comment:', e)
 		return next({ status: 500, msg: 'Failed to post your comment' })
 	}
 }
@@ -540,7 +528,6 @@ export const getComments = async (req, res, next) => {
 			totalPages
 		})
 	} catch (e) {
-		console.error('Error getting comments:', e)
 		return next({ status: 500, msg: 'Failed to fetch comments' })
 	}
 }
@@ -571,7 +558,6 @@ export const editComment = async (req, res, next) => {
 
 		return res.json({ success: true, comment })
 	} catch (e) {
-		console.log('Error editing comment: ', e)
 		next({ msg: 'Failed to edit comment. Please try again later' })
 	}
 }
@@ -595,7 +581,6 @@ export const deleteComment = async (req, res, next) => {
 		
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error deleting comment: ', e)
 		next({ msg: 'Failed to delete comment. Please try again later' })
 	}
 }
@@ -674,7 +659,6 @@ export const postReply = async (req, res, next) => {
 			}
 		})
 	} catch (e) {
-		console.error('Error posting reply:', e)
 		return next({ status: 500, msg: 'Failed to post your reply' })
 	}
 }
@@ -762,7 +746,6 @@ export const getReplies = async (req, res, next) => {
 			totalPages
 		})
 	} catch (e) {
-		console.error('Error getting replies:', e)
 		return next({ status: 500, msg: 'Failed to fetch replies' })
 	}
 }
@@ -788,7 +771,6 @@ export const deleteReply = async (req, res, next) => {
 		
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error deleting reply: ', e)
 		next({ msg: 'Failed to delete reply. Please try again later' })
 	}
 }
@@ -820,7 +802,6 @@ export const editReply = async (req, res, next) => {
 
 		return res.json({ success: true, msg: 'Reply updated', reply })
 	} catch (e) {
-		console.error('Error editing reply:', e)
 		next({ msg: 'Failed to edit reply. Please try again later' })
 	}
 }
@@ -868,7 +849,6 @@ export const getFeed = async (req, res, next) => {
 			length: shuffled.length,
 		})
 	} catch (e) {
-		console.log('Error getting feed: ', e)
 		return next({ msg: 'Failed to fetch your feed' })
 	}
 }
@@ -893,7 +873,6 @@ export const addViewHistory = async (req, res, next) => {
 
 		return res.json({ success: true })
 	} catch (e) {
-		console.error('Error adding to view history:', e)
 		return next({ msg: 'Failed to update view history' })
 	}
 }

@@ -42,7 +42,6 @@ export const getMyData = async (req, res, next) => {
 		
 		return res.json({ success: true, user: { ...user[0], notifications }})
 	} catch (e) {
-		console.log('Error getting my data: ', e)
 		next(e)
 	}
 }
@@ -62,7 +61,6 @@ export const followingList = async (req, res, next) => {
 		
 		return res.json({ success: true, list: list.following })
 	} catch (e) {
-		console.log('Error getting following list: ', e)
 		next(e)
 	}
 }
@@ -111,7 +109,6 @@ export const getUserData = async (req, res, next) => {
 			}})
 		
 	} catch (e) {
-		console.log('Error getting user data: ', e)
 		next(e)
 	}
 }
@@ -176,7 +173,6 @@ export const follow = async (req, res, next) => {
 		
 	} catch (e) {
 		await abortAndEnd()
-		console.log('Error following user: ', e)
 		next(e)
 	}
 }
@@ -224,7 +220,6 @@ export const unfollow = async (req, res, next) => {
 		return res.json({success: true})
 		
 	} catch (e) {
-		console.log('Error unfollowing user: ', e)
 		await abortAndEnd()
 		next(e)
 	}
@@ -243,7 +238,6 @@ export const search = async (req, res, next) => {
 		}, {username: 1, avatar: 1}).limit(15)
 		return res.json({ success: true, result })
 	} catch (e) {
-		console.log('Error searching user: ', e)
 		next(e)
 	}
 }
@@ -266,7 +260,6 @@ export const setSearchHistory = async (req, res, next) => {
 
 		return res.json({ success: true })
 	} catch (e) {
-		console.error('Error adding search history: ', e)
 		next(e)
 	}
 }
@@ -287,7 +280,6 @@ export const getSearchHistory = async (req, res, next) => {
 
 		return res.json({ success: true, history: sorted })
 	} catch (e) {
-		console.error('Error getting search history: ', e)
 		next(e)
 	}
 }
@@ -303,7 +295,6 @@ export const deleteSearchHistory = async (req, res, next) => {
 
 		return res.json({ success: true })
 	} catch (e) {
-		console.error('Error deleting search history item:', e)
 		next(e)
 	}
 }
@@ -319,7 +310,6 @@ export const getNotification = async (req, res, next) => {
 		
 		return res.json({ success: true, notifications })
 	} catch (e) {
-		console.log('Error getting notification: ', e)
 		return next({ msg: 'Failed to fetch notifications' })
 	}
 }
@@ -346,7 +336,6 @@ export const deleteNotification = async (req, res, next) => {
 		
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error deleting notification: ', e)
 		return next({ msg: 'Failed to delete notifications' })
 	}
 }
@@ -390,7 +379,6 @@ export const toggleHideUser = async (req, res, next) => {
 
 		return res.json({ success: true, toggled: true, action, msg })
 	} catch (e) {
-		console.error('Error toggling user visibility:', e)
 		return next({ msg: 'Failed' })
 	}
 }
@@ -407,7 +395,6 @@ export const updateBio = async (req, res, next) => {
 		
 		return res.json({ success: true, msg: 'Profile updated' })
 	} catch (e) {
-		console.log('Error updating bio: ', e)
 		return next({ msg: 'Failed to update your bio' })
 	}
 }
@@ -437,7 +424,6 @@ export const updateAvatar = async (req, res, next) => {
 		return res.json({ success: true, url: result.secure_url, public_id: result.public_id })
 	} catch (e) {
 		fs.unlinkSync(req.file.path)
-		console.log('Error updating avatar', e)
 		next({ msg: 'Failed to update avatar' })
 	}
 }
@@ -454,7 +440,6 @@ export const getPhotos = async (req, res, next) => {
 		
 		return res.json({ success: true, photos: user.photos })
 	} catch (e) {
-		console.log('Error getting photos', e)
 		next({ msg: 'Failed to fetch photos' })
 	}
 }
@@ -469,7 +454,6 @@ export const updateCover = async (req, res, next) => {
 		
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error updating cover', e)
 		next({ msg: 'Failed to update cover' })
 	}
 }
@@ -513,7 +497,6 @@ export const addVisitor = async (req, res, next) => {
 
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error adding visitor', e)
 		return next(e)
 	}
 }
@@ -556,7 +539,6 @@ export const getVisitors = async (req, res, next) => {
 
 		return res.status(200).json({ success: true, visitors })
 	} catch (e) {
-		console.log('Error getting visitors', e)
 		return next({ status: 500, success: false, msg: 'Server error' })
 	}
 }

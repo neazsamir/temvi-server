@@ -94,7 +94,6 @@ export const register = async (req, res, next) => {
 		return res.status(201).json({ success: true, msg: "Account created", newUser: user })
 	} catch (e) {
 		await abortAndEnd()
-		console.log('Error registering user: ', e)
 		next(e)
 	}
 }
@@ -125,7 +124,6 @@ export const resendVerificationToken = async (
 		
 		return res.json({ success: true, msg: 'Verification link sent. Please check your email inbox.' })
 	} catch (e) {
-		console.log('Error resending verification token: ', e)
 		next(e)
 	}
 }
@@ -186,7 +184,6 @@ export const verifyToken = async (req, res, next) => {
 		return res.json({ success: true, msg: 'Email verification successful'})
 		
 	} catch (e) {
-		console.log('Error verifying token:', e)
 		next(e)
 	}
 }
@@ -275,7 +272,6 @@ export const login = async (req, res, next) => {
 		return res.json({ success: true, msg: `Welcome back @${user.username.toUpperCase()}`, user })
 		
 	} catch (e) {
-		console.log('Error logging-in user: ', e)
 		next(e)
 	}
 }
@@ -337,7 +333,6 @@ export const verify2Fa = async (req, res, next) => {
 	
 	return res.json({ success: true, msg: `Welcome back, @${userObj.username?.toUpperCase()}`, user: userObj })
 	} catch (e) {
-		console.log('Error verifying 2fa', e)
 		return next(e)
 	}
 }
@@ -347,7 +342,6 @@ export const logout = async (req, res, next) => {
 		res.cookie('jwt', '', { maxAge: 0 })
 		return res.json({ success: true, msg: 'Logged out' })
 	} catch (e) {
-		console.log('Error logging-out user: ', e)
 		next(e)
 	}
 }
@@ -360,7 +354,6 @@ export const enable2Fa = async (req, res, next) => {
 		
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error enabling 2fa', e)
 		return next({ msg: 'Failed to enable 2FA' })
 	}
 }
@@ -383,7 +376,6 @@ export const disable2Fa = async (req, res, next) => {
 		
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error disabling 2fa', e)
 		return next({ msg: 'Failed to disable 2FA' })
 	}
 }
@@ -396,7 +388,6 @@ export const checkUsername = async (req, res, next) => {
 		if (usernameExists) return next({ status: 409, msg: "Username already exists", extraDetails: { exists: true }})
 		else return res.json({ success: true, exists: false })
 	} catch (e) {
-		console.log("Error checking username", e)
 		next(e)
 	}
 }
@@ -416,7 +407,6 @@ export const checkOtpRequester = async (req, res, next) => {
 		
 		return res.json({ success: true })
 	} catch (e) {
-		console.log('Error checking otp requester: ', e)
 		next(e)
 	}
 }
@@ -455,7 +445,6 @@ export const sendResetMail = async (req, res, next) => {
 
 		return res.json({ success: true, msg: 'Password reset link sent. Please check your email inbox.' })
 	} catch (e) {
-		console.log('Error sending reset mail: ', e)
 		next(e)
 	}
 }
@@ -503,7 +492,6 @@ export const resetPassword = async (req, res, next) => {
 
 		return res.json({ success: true, msg: 'Password has been reset successfully.' })
 	} catch (e) {
-		console.error('Error resetting password:', e)
 		next(e)
 	}
 }
