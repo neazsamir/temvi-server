@@ -1,0 +1,40 @@
+{
+  "name": "temvi",
+  "version": "1.0.0",
+  "description": "A lite weight social media website",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neazsamir/temvi-server.git"
+  },
+  "author": "Neaz Mahmud Samir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neazsamir/temvi-server/issues"
+  },
+  "homepage": "https://github.com/neazsamir/temvi-server#readme",
+  "dependencies": {
+    "argon2": "^0.43.0",
+    "bullmq": "^5.56.0",
+    "cloudinary": "^2.7.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
+    "express-validator": "^7.2.1",
+    "ioredis": "^5.6.1",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.16.0",
+    "multer": "^2.0.1",
+    "nodemailer": "^7.0.3",
+    "sanitize-html": "^2.17.0",
+    "socket.io": "^4.8.1"
+  }
+}
