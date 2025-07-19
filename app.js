@@ -26,7 +26,9 @@ app.use(express.json())
 app.use('/api/auth', authRouter)
 app.use('/api/app', appRouter)
 app.use('/api/post', postRouter)
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }))
 app.use(errorMiddleware)
+
 
 connectDB()
 .then(() => server.listen(PORT, () =>

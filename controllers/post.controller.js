@@ -126,8 +126,9 @@ export const getSinglePost = async (req, res, next) => {
 		
 		if (post.visibility === 'followers' && (!followingCreator || !isOwner)) return next({ status: 401, msg: 'Only followers can view this post' })
 		
+		const isLiked = await User.exists({ _id: user._id, liked: post._id })
 		
-		res.json({ success: true, post })
+		res.json({ success: true, post: {...post, liked: isLiked ? true : false} })
 	} catch (e) {
 		console.log('Error getting single post', e)
 		next({ msg: 'Failed to fetch' })
