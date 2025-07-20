@@ -9,6 +9,7 @@ import redis from '../utils/redis.js'
 import mongoose from 'mongoose'
 import crypto from 'crypto'
 import fs from 'fs'
+import vibesEnum from '../constants/vibes.js'
 
 
 
@@ -27,6 +28,7 @@ export const getMyData = async (req, res, next) => {
 					bio: 1,
 					avatar: 1,
 					cover: 1,
+					vibes: 1,
 					_id: 1,
 					following: {
 						$size: "$following"
@@ -77,6 +79,7 @@ export const getUserData = async (req, res, next) => {
 					bio: 1,
 					avatar: 1,
 					cover: 1,
+					vibes: 1,
 					_id: 1,
 					following: {
 						$size: "$following"
@@ -542,3 +545,36 @@ export const getVisitors = async (req, res, next) => {
 		return next({ status: 500, success: false, msg: 'Server error' })
 	}
 }
+
+export const updateVibes = async (req, res, next) => {
+	try {
+		const { user } = req;
+		const { vibes } = req.body;
+
+		if (!Array.isArray(vibes)) {
+			return next({ msg: 'Vibes must be an array.' });
+		}
+
+		if (vibes.length === 0 || vibes.length > 3) {
+			return next({ msg: 'Select 1 to 3 vibes only.' });
+		}
+
+		const uniqueVibes = [...new Set(vibes)];
+		if (uniqueVibes.length !== vibes.length) {
+			return next({ msg: 'Duplicate vibes are not allowed.' });
+		}
+
+		const invalid = vibes.find(vibe => !vibesEnum.includes(vibe));
+		if (invalid) {
+			return next({ msg: `Invalid vibe: ${invalid}` });
+		}
+
+		await User.updateOne({ _id: user._id }, {
+			$set: { vibes: uniqueVibes }
+		})
+
+		res.json({ msg: 'Vibes updated successfully.', vibes: uniqueVibes });
+	} catch (e) {
+		next({ msg: 'Failed to update vibes. Try again' });
+	}
+};

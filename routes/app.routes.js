@@ -8,6 +8,7 @@ import {
 	addVisitor,
 	getMyData,
 	getUserData,
+	updateVibes,
 	follow,
 	unfollow,
 	followingList,
@@ -29,32 +30,34 @@ from '../middlewares/protectRoute.middleware.js'
 const router = Router()
 const upload = multer({ dest: 'temp/' })
 
+router.use(protectRoute)
 
-router.put('/avatar', protectRoute, upload.single('file'), updateAvatar)
-router.put('/cover', protectRoute, updateCover)
-router.get('/photos', protectRoute, getPhotos)
+router.put('/avatar', upload.single('file'), updateAvatar)
+router.put('/cover', updateCover)
+router.put('/vibes', updateVibes)
+router.get('/photos', getPhotos)
 
 router.route('/visitors')
-.post(protectRoute, addVisitor)
-.get(protectRoute, getVisitors)
+.post(addVisitor)
+.get(getVisitors)
 
-router.get('/search', protectRoute, search)
+router.get('/search', search)
 router.route('/searchHistory')
-.post(protectRoute, setSearchHistory)
-.get(protectRoute, getSearchHistory)
-.delete(protectRoute, deleteSearchHistory)
+.post(setSearchHistory)
+.get(getSearchHistory)
+.delete(deleteSearchHistory)
 
-router.post('/follow', protectRoute, follow)
-router.delete('/unfollow', protectRoute, unfollow)
-router.patch('/toggleHideUser', protectRoute, toggleHideUser)
-router.get('/myData', protectRoute, getMyData)
-router.get('/followingList', protectRoute, followingList)
-router.get('/userData/:username', protectRoute, getUserData)
-router.put('/bio', protectRoute, updateBio)
+router.post('/follow', follow)
+router.delete('/unfollow', unfollow)
+router.patch('/toggleHideUser', toggleHideUser)
+router.get('/myData', getMyData)
+router.get('/followingList', followingList)
+router.get('/userData/:username', getUserData)
+router.put('/bio', updateBio)
 
 router.route('/notification')
-.get(protectRoute, getNotification)
-.delete(protectRoute, deleteNotification)
+.get(getNotification)
+.delete(deleteNotification)
 
 
 export default router;

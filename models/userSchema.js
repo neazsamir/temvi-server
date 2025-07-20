@@ -1,10 +1,12 @@
 import { Schema, model } from 'mongoose'
 import jwt from 'jsonwebtoken'
 import covers from '../constants/covers.js'
+import vibes from '../constants/vibes.js'
 
 
 const randomCover = covers[Math.floor(Math.random() * covers.length)]
 const defaultAvatar = "https://res.cloudinary.com/dnrvzfgom/image/upload/v1752914837/temvi_gp6f47.png"
+
 
 const userSchema = new Schema({
 	username: {
@@ -42,6 +44,16 @@ const userSchema = new Schema({
 		type: String,
 		maxLength: 150,
 		default: 'Temvi is awesome 👍🏻😎'
+	},
+	vibes: {
+	type: [String],
+	validate: [
+		{
+			validator: (arr) => arr.length <= 3,
+			message: 'You can select up to 3 vibes only.'
+		}
+	],
+	enum: vibes
 	},
 	followers: [{
   type: Schema.Types.ObjectId,
