@@ -816,8 +816,7 @@ export const getFeed = async (req, res, next) => {
 		const myInfo = await User.findById(user._id).select('following hiddenUsers liked')
 		const history = await redis.smembers(`history:${user._id}`) || []
 
-		// Fetch potential posts (we fetch more than limit to allow proper mixing)
-		const potentialPosts = await Post.find({
+		const posts = await Post.find({
 			_id: { $nin: history },
 			creator: { $nin: [...myInfo.hiddenUsers, user._id] },
 			$or: [
@@ -831,42 +830,23 @@ export const getFeed = async (req, res, next) => {
 			]
 		})
 		.populate('creator', 'avatar username')
+		.skip(skip)
+		.limit(limit)
 		.lean()
 
-		const followedSet = new Set(myInfo.following.map(id => id.toString()))
 		const likedSet = new Set(myInfo.liked.map(id => id.toString()))
 
-		const followed = []
-		const others = []
-
-		for (const post of potentialPosts) {
-			const isFollowed = followedSet.has(post.creator._id.toString())
-			const liked = likedSet.has(post._id.toString())
-			const enrichedPost = { ...post, liked }
-
-			if (isFollowed) followed.push(enrichedPost)
-			else others.push(enrichedPost)
-		}
-
-		// Shuffle both groups
-		const shuffledFollowed = lodash.shuffle(followed)
-		const shuffledOthers = lodash.shuffle(others)
-
-		// Weighted selection: 40% from followed, 60% from others
-		const followedCount = Math.floor(limit * 0.4)
-		const othersCount = limit - followedCount
-
-		const finalPosts = lodash.shuffle([
-			...shuffledFollowed.slice(0, followedCount),
-			...shuffledOthers.slice(0, othersCount)
-		])
+		const shuffled = lodash.shuffle(posts).map(post => ({
+			...post,
+			liked: likedSet.has(post._id.toString())
+		}))
 
 		return res.json({
 			success: true,
-			posts: finalPosts,
+			posts: shuffled,
 			page,
 			limit,
-			length: finalPosts.length,
+			length: shuffled.length,
 		})
 	} catch (e) {
 		return next({ msg: 'Failed to fetch your feed' })
